@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Website Monitoring Dashboard</title>
+    <style>
+        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        body { font-family: Arial, sans-serif; }
+        .container { width: 90%; margin: auto; text-align: center; }
+        .button-container { margin-bottom: 20px; }
+        .button { padding: 10px 20px; background-color: #007BFF; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        .button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website Monitoring Dashboard</h1>
+        <div class="button-container">
+            <a href="{{ url_for('add_website') }}"><button class="button">Add New Website</button></a>
+            <form action="{{ url_for('run_monitor') }}" method="post" style="display:inline;">
+                <button type="submit" class="button">Run Monitoring</button>
+            </form>
+        </div>
+        <table>
+            <tr>
+                <th>URL</th>
+                <th>Time Namelookup (s)</th>
+                <th>Time Connect (s)</th>
+                <th>Time Appconnect (s)</th>
+                <th>Time Pretransfer (s)</th>
+                <th>Time Redirect (s)</th>
+                <th>Time Starttransfer (s)</th>
+                <th>Total Time (s)</th>
+                <th>Speed Download (bytes/s)</th>
+                <th>Speed Upload (bytes/s)</th>
+                <th>Size Download (bytes)</th>
+                <th>Checked At</th>
+		<th>Duplicate ACKs</th>
+            </tr>
+            {% for metric in metrics %}
+            <tr>
+                <td><a href="{{ url_for('metrics', url=metric.url) }}">{{ metric.url }}</a></td>
+                <td>{{ metric.time_namelookup }}</td>
+                <td>{{ metric.time_connect }}</td>
+                <td>{{ metric.time_appconnect }}</td>
+                <td>{{ metric.time_pretransfer }}</td>
+                <td>{{ metric.time_redirect }}</td>
+                <td>{{ metric.time_starttransfer }}</td>
+                <td>{{ metric.time_total }}</td>
+                <td>{{ metric.speed_download }}</td>
+                <td>{{ metric.speed_upload }}</td>
+                <td>{{ metric.size_download }}</td>
+                <td>{{ metric.timestamp }}</td>
+ 		<td>{{ metric.duplicate_acks }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
+

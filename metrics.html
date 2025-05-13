@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metrics for {{ url }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container { width: 80%; margin: auto; text-align: center; }
+        .chart-container { width: 100%; margin-top: 20px; }
+        .back-btn { display: inline-block; margin-top: 20px; padding: 10px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Metrics for {{ url }}</h1>
+        <a href="{{ url_for('index') }}" class="back-btn">Back</a>
+
+        <div class="chart-container">
+            <h2>Response Time Over Time</h2>
+            <canvas id="responseTimeChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2>Download Speed Over Time</h2>
+            <canvas id="downloadSpeedChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const data = {{ data | tojson }};
+
+        const timestamps = data.map(entry => entry.timestamp);
+        const responseTimes = data.map(entry => entry.time_total);
+        const downloadSpeeds = data.map(entry => entry.speed_download);
+
+        // Response Time Chart
+        new Chart(document.getElementById('responseTimeChart'), {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Response Time (s)',
+                    data: responseTimes,
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Time' } },
+                    y: { title: { display: true, text: 'Seconds' } }
+                }
+            }
+        });
+
+        // Download Speed Chart
+        new Chart(document.getElementById('downloadSpeedChart'), {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Download Speed (bytes/s)',
+                    data: downloadSpeeds,
+                    borderColor: 'red',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Time' } },
+                    y: { title: { display: true, text: 'Bytes/s' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
